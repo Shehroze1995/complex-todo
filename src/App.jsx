@@ -5,7 +5,7 @@ const App = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<GetStarted />} />
+        <Route path="complex-todo" element={<GetStarted />} />
       </Routes>
     </BrowserRouter>
   );
