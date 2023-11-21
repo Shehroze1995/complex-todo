@@ -1,17 +1,17 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { MdRemoveRedEye } from "react-icons/md";
 
 const GetStarted = () => {
   const [getStarted, setGetStarted] = useState(false);
   return (
-    <div className="grid grid-cols-2 p-8 min-h-screen max-w-[1800px] m-auto max-[900px]:block max-[900px]:p-4 max-[900px]:bg-[#111111]">
+    <div className="grid grid-cols-2 p-8 min-h-screen max-w-[1800px] m-auto max-[900px]:block max-[900px]:p-4 max-[900px]:bg-[#111111] onRenderAnimate">
       <div className="bg-[#111111] relative h-[calc(100vh-64px)] flex place-items-center place-content-center rounded-lg max-[900px]:hidden">
         <h2 className="text-white absolute top-8 left-8 text-4xl font-extrabold">
-          Todo <br />
-          App
+          Todo App
         </h2>
         <img
-          className={`w-full max-w-xs object-contain ${
+          className={`w-full max-w-xs object-contain transition-all duration-300 ${
             getStarted ? "rotate-90" : "rotate-0"
           }`}
           src="https://assets.api.uizard.io/api/cdn/stream/e99e168f-d429-4983-8089-5b67c2cb03be.png"
@@ -19,7 +19,7 @@ const GetStarted = () => {
       </div>
       <div className="flex place-items-center justify-center h-[calc(100vh-64px)]">
         {!getStarted ? (
-          <section className="w-9/12 m-auto grid gap-4 max-[900px]:w-full">
+          <section className="w-8/12 m-auto grid gap-4 max-[900px]:w-full">
             <h2 className="text-4xl font-extrabold max-[900px]:text-white">
               Productive Mind
             </h2>
@@ -37,7 +37,7 @@ const GetStarted = () => {
             </button>
           </section>
         ) : (
-          <section className="w-9/12 m-auto grid gap-4 max-[900px]:w-full">
+          <section className="w-8/12 m-auto grid gap-4 max-[900px]:w-full onRenderAnimate">
             <h2 className="text-4xl font-extrabold max-[900px]:text-white">
               Sign in
             </h2>
@@ -60,12 +60,13 @@ const GetStarted = () => {
               />
               <MdRemoveRedEye className="absolute top-[50%] translate-y-[-50%] right-3 cursor-not-allowed" />
             </div>
-            <button
-              className="text-xl bg-[#FFD43B] w-full py-2 rounded-md transition-all duration-300 hover:bg-[#111111] hover:text-white"
+            <Link
+              to={`homepage`}
+              className="text-xl text-center bg-[#FFD43B] w-full py-2 rounded-md transition-all duration-300 hover:bg-[#111111] hover:text-white"
               type="button"
             >
               Sign in
-            </button>
+            </Link>
             <div className="flex place-items-center">
               <div className="border-2 border-gray-300 flex-1 max-[900px]:border max-[900px]:border-gray-800" />
               <p className="mx-2 text-gray-600 max-[900px]:text-gray-300">OR</p>
