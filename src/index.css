@@ -1,11 +1,22 @@
 @import url("https://fonts.googleapis.com/css2?family=Lexend+Deca&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lato&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-* {
+.LexendFont {
   font-family: "Lexend Deca", sans-serif;
+}
+
+.RobotoFont {
+  font-family: 'Roboto', sans-serif;
+}
+
+.gridColumns {
+  grid-template-columns: repeat(auto-fit, minmax(250px, 400px));
 }
 
 .onRenderAnimate {

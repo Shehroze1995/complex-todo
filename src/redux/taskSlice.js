@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { format } from "date-fns";
 
 const saveTaskInLocalStorage = (task) => {
   localStorage.setItem("tasks", JSON.stringify(task));
@@ -7,14 +8,56 @@ const saveTaskInLocalStorage = (task) => {
 const getTask = () => {
   const tasks = localStorage.getItem("tasks");
   if (tasks) return JSON.parse(tasks);
-  else return [];
+  else
+    return [
+      {
+        id: crypto.randomUUID(),
+        title: "Code",
+        desc: "Do some coding",
+        type: "Work",
+        dueDate: format(new Date(), "yyyy-MM-dd"),
+        completed: false,
+      },
+      {
+        id: crypto.randomUUID(),
+        title: "Projects",
+        desc: "Create Projects",
+        type: "Work",
+        dueDate: format(new Date(), "yyyy-MM-dd"),
+        completed: false,
+      },
+      {
+        id: crypto.randomUUID(),
+        title: "Test",
+        desc: "Prepare college test",
+        type: "Personal",
+        dueDate: format(new Date(), "yyyy-MM-dd"),
+        completed: false,
+      },
+      {
+        id: crypto.randomUUID(),
+        title: "Grocery",
+        desc: "Get some groceries from market",
+        type: "Personal",
+        dueDate: format(new Date(), "yyyy-MM-dd"),
+        completed: false,
+      },
+    ];
+};
+
+const getLists = () => {
+  const lists = localStorage.getItem("lists");
+  if (lists) return JSON.parse(lists);
+  else return ["Personal", "Work"];
 };
 
 const initialState = {
   taskList: getTask(),
   selectedTask: {},
+  isTaskAdding: false,
   isTaskEditing: false,
-  filterBy: "Today",
+  filterBy: "All Task",
+  lists: getLists(),
 };
 
 const taskSlice = createSlice({
@@ -27,7 +70,7 @@ const taskSlice = createSlice({
         {
           title: payload.title,
           type: payload.type,
-          dueDate: new Date(payload.dueDate).toLocaleDateString(),
+          dueDate: payload.dueDate,
           desc: payload.desc,
           id: crypto.randomUUID(),
           completed: false,
@@ -42,22 +85,18 @@ const taskSlice = createSlice({
     updateTask: (state, { payload }) => {
       state.taskList = state.taskList.map((task) => {
         if (task.id == payload.id) {
-          if (payload.case == "updateStatus") {
-            return { ...task, completed: !task.completed };
-          }
-          if (payload.case == "updateDetails") {
-            return {
-              ...task,
-              title: payload.title,
-              desc: payload.desc,
-              type: payload.type,
-              dueDate: payload.dueDate,
-            };
-          }
+          return { ...task, ...payload };
         }
         return task;
       });
       saveTaskInLocalStorage(state.taskList);
+    },
+    setTaskAddingTrue: (state) => {
+      state.isTaskAdding = true;
+      state.selectedTask = {};
+    },
+    setTaskAddingFalse: (state) => {
+      state.isTaskAdding = false;
     },
     getSelectedTask: (state, { payload }) => {
       state.selectedTask = state.taskList.find((task) => task.id == payload.id);
@@ -67,9 +106,19 @@ const taskSlice = createSlice({
     },
     setEditingFalse: (state) => {
       state.isTaskEditing = false;
+      state.selectedTask = {};
     },
     setFilterBy: (state, action) => {
       state.filterBy = action.payload;
+    },
+    addList: (state, { payload }) => {
+      if (state.lists.some((list) => list == payload.listName)) return;
+      else state.lists = [...state.lists, payload.listName];
+      localStorage.setItem("lists", JSON.stringify(state.lists));
+    },
+    deleteList: (state, action) => {
+      state.lists = state.lists.filter((list) => list !== action.payload);
+      localStorage.setItem("lists", JSON.stringify(state.lists));
     },
   },
 });
@@ -82,6 +131,10 @@ export const {
   setEditingTrue,
   setEditingFalse,
   setFilterBy,
+  setTaskAddingTrue,
+  setTaskAddingFalse,
+  addList,
+  deleteList,
 } = taskSlice.actions;
 
 export default taskSlice.reducer;

@@ -1,9 +1,18 @@
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addTask, setEditingFalse, updateTask } from "../redux/taskSlice";
-import { useEffect } from "react";
+import {
+  addTask,
+  setEditingFalse,
+  setTaskAddingFalse,
+  updateTask,
+} from "../redux/taskSlice";
+import { IoClose } from "react-icons/io5";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { format } from "date-fns";
+import { toast } from "react-toastify";
 
 const Modal = ({
-  lists,
   isModalOpen,
   setIsModalOpen,
   title,
@@ -16,13 +25,20 @@ const Modal = ({
   setType,
 }) => {
   const dispatch = useDispatch();
-  const { selectedTask, isTaskEditing } = useSelector((store) => store.task);
+  const { selectedTask, isTaskEditing, lists, isTaskAdding } = useSelector(
+    (store) => store.task
+  );
+  const [selectedTodo, setSelectedTodo] = useState(selectedTask);
+
+  useEffect(() => {
+    setSelectedTodo(selectedTask);
+  }, [selectedTask]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if (isTaskEditing) {
       dispatch(
         updateTask({
-          case: "updateDetails",
           id: selectedTask.id,
           title,
           desc,
@@ -30,36 +46,47 @@ const Modal = ({
           type,
         })
       );
+      toast.success("Task updated")
     } else {
       dispatch(addTask({ title, desc, type, dueDate }));
+      toast.success("Task added")
     }
     setIsModalOpen(false);
     setTitle("");
     setDesc("");
-    setDueDate("");
+    setDueDate(format(new Date(), "yyyy-MM-dd"));
     setType(lists[0]);
   };
 
   useEffect(() => {
-    if (isTaskEditing) {
-      setTitle(selectedTask.title);
-      setDesc(selectedTask.desc);
-      setDueDate(selectedTask.dueDate);
-      setType(selectedTask.type);
-    }
-  }, [isTaskEditing]);
+    setTitle(selectedTask.title || "");
+    setDesc(selectedTask.desc || "");
+    setDueDate(selectedTask.dueDate || format(new Date(), "yyyy-MM-dd"));
+    setType(selectedTask.type || lists[0]);
+  }, [selectedTodo]);
+
+  useEffect(() => {
+    setTitle("");
+    setDesc("");
+    setDueDate("");
+    setType(lists[0]);
+  }, [isTaskAdding]);
 
   return (
     <div
-      className={`fixed top-0 left-0 z-10 w-full h-screen bg-[#00000091] flex items-center justify-center transition-all duration-300 ${
-        isModalOpen ? "opacity-100" : "opacity-0 invisible"
+      className={`transition-all duration-300 ${
+        isModalOpen ? "translate-x-0" : "absolute top-0 right-0 translate-x-[100%] invisible"
+      } ${
+        window.innerWidth > 1200
+          ? "block flex-1 max-w-md "
+          : "fixed top-0 left-0 z-10 w-screen h-screen bg-[#0000003d] flex items-center justify-center "
       }`}
     >
       <form
         onSubmit={(e) => handleSubmit(e)}
         className={`bg-white w-11/12 max-w-md p-4 flex flex-col gap-4 text-xl rounded-lg transition-all duration-300 ${
-          isModalOpen ? "scale-100" : "scale-90"
-        }`}
+          isModalOpen ? "" : ""
+        } max-[370px]:text-base`}
       >
         <h3 className="text-3xl">{isTaskEditing ? "Update" : "Add"} Task:</h3>
         <input
@@ -102,12 +129,19 @@ const Modal = ({
           <input
             value={dueDate}
             onChange={(e) => setDueDate(e.target.value)}
+            min={format(new Date(), "yyyy-MM-dd")}
             className="outline-none border border-gray-300 p-1 rounded-lg"
             type="date"
             name="dueDate"
             id="dueDate"
             required
           />
+          {/* <DatePicker
+            className="outline-none w-28 ml-4"
+            selected={dueDate}
+            onChange={(date) => setDueDate(date)}
+            minDate={new Date()} required
+          /> */}
         </div>
         <div className="flex gap-2">
           <button
@@ -123,6 +157,7 @@ const Modal = ({
               setDesc("");
               setDueDate("");
               setType(lists[0]);
+              dispatch(setTaskAddingFalse());
               const timeout = setTimeout(() => {
                 dispatch(setEditingFalse());
               }, 300);
@@ -136,6 +171,48 @@ const Modal = ({
         </div>
       </form>
     </div>
+    // <div className="flex-1 max-w-sm">
+    //   <form className="text-xl grid gap-4 text-gray-600">
+    //     <div className="flex items-center justify-between">
+    //       <h3 className="text-2xl text-black">Task:</h3>
+    //       <IoClose className="cursor-pointer text-gray-500 text-3xl" />
+    //     </div>
+    //     <input
+    //       className="border border-gray-300 rounded-lg w-full py-1 pl-5 outline-none"
+    //       placeholder="Title.."
+    //       type="text"
+    //     />
+    //     <textarea
+    //       className="border border-gray-300 w-full rounded-lg py-1 px-5 outline-none"
+    //       placeholder="Description.."
+    //       id=""
+    //       rows="5"
+    //     ></textarea>
+    //     <div className="flex items-center gap-16">
+    //       <label htmlFor="list">List</label>
+    //       <select
+    //         className="outline-none p-1"
+    //         name="list"
+    //         id="list"
+    //       >
+    //         {list.map((list) => (
+    //           <option key={list} value={list}>
+    //             {list}
+    //           </option>
+    //         ))}
+    //       </select>
+    //     </div>
+    //     <div className="">
+    //       <label htmlFor="">Due Date</label>
+    //       <DatePicker
+    //         className="outline-none w-28 ml-4"
+    //         selected={dueDate}
+    //         onChange={(date) => setDueDate(date)}
+    //         minDate={new Date()}
+    //       />
+    //     </div>
+    //   </form>
+    // </div>
   );
 };
 

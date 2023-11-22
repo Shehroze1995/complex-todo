@@ -1,11 +1,14 @@
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   deleteTask,
   getSelectedTask,
   updateTask,
   setEditingTrue,
+  setTaskAddingFalse,
 } from "../redux/taskSlice";
-import { MdEdit, MdDelete } from "react-icons/md";
+import { MdEdit, MdDelete, MdDateRange } from "react-icons/md";
+import { format } from "date-fns";
+import { toast } from "react-toastify";
 
 const SingleTask = ({
   id,
@@ -18,11 +21,16 @@ const SingleTask = ({
 }) => {
   const dispatch = useDispatch();
 
-  const handleDelete = (id) => dispatch(deleteTask({ id }));
-  const handleStatus = (id) => {
-    dispatch(updateTask({ id, case: "updateStatus" }));
+  const handleDelete = (id) => {
+    setIsModalOpen(false);
+    dispatch(deleteTask({ id }));
+    toast.info('Task deleted')
+  };
+  const handleStatus = (id, completed) => {
+    dispatch(updateTask({ id, completed: !completed }));
   };
   const handleEdit = (id) => {
+    dispatch(setTaskAddingFalse());
     dispatch(getSelectedTask({ id }));
     dispatch(setEditingTrue());
     setIsModalOpen(true);
@@ -30,26 +38,27 @@ const SingleTask = ({
 
   return (
     <div
-      className="border-4 border-gray-300 rounded-md p-2 my-3 flex justify-between w-full max-w-lg ml-10"
+      className="rounded-md p-2 flex justify-between w-full max-[370px]:text-sm"
       key={id}
     >
       <section>
         <p
-          className={`capitalize text-2xl text-blue-500 underline ${
+          className={`capitalize text-2xl underline break-all ${
             completed && "line-through"
-          }`}
+          } max-[370px]:text-xl`}
         >
           {title}
         </p>
         <p className={`break-all ${completed && "line-through"}`}>
           Description: {desc}
         </p>
-        <p className="text-gray-600">Due Date: {dueDate}</p>
-        <p className="text-gray-600">Task nature: {type}</p>
+        <p className="text-gray-600 flex items-center gap-1">
+          <MdDateRange className="text-xl -mt-1"/> {format(new Date(dueDate), "dd-MM-yyyy")}
+        </p>
         <div className="flex items-center gap-1 text-green-600 select-none">
           <input
             checked={completed}
-            onChange={() => handleStatus(id)}
+            onChange={() => handleStatus(id, completed)}
             className="w-4 h-4"
             type="checkbox"
             name="completed"
