@@ -3,10 +3,32 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="shortcut icon" href="/complex-todo/assets/favIcon-z49PUR57.png" type="image/x-icon">
+    <link
+      rel="shortcut icon"
+      href="/complex-todo/assets/favIcon-z49PUR57.png"
+      type="image/x-icon"
+    />
+    <script type="text/javascript">
+      (function (l) {
+        if (l.search[1] === "/") {
+          var decoded = l.search
+            .slice(1)
+            .split("&")
+            .map(function (s) {
+              return s.replace(/~and~/g, "&");
+            })
+            .join("?");
+          window.history.replaceState(
+            null,
+            null,
+            l.pathname.slice(0, -1) + decoded + l.hash
+          );
+        }
+      })(window.location);
+    </script>
     <title>TODO</title>
-    <script type="module" crossorigin src="/complex-todo/assets/index-0RqrpSJa.js"></script>
-    <link rel="stylesheet" crossorigin href="/complex-todo/assets/index-x43KeYNu.css">
+    <script type="module" crossorigin src="/complex-todo/assets/index-_lpzxUKE.js"></script>
+    <link rel="stylesheet" crossorigin href="/complex-todo/assets/index-3vTAxSl7.css">
   </head>
   <body class="min-h-screen">
     <div id="root"></div>
