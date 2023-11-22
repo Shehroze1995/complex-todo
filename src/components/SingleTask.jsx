@@ -1,4 +1,4 @@
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import {
   deleteTask,
   getSelectedTask,
@@ -38,7 +38,7 @@ const SingleTask = ({
 
   return (
     <div
-      className="rounded-md p-2 flex justify-between w-full max-[370px]:text-sm"
+      className="rounded-md p-2 flex justify-between w-full border-l-[6px] border-l-gray-400 onRenderAnimate max-[370px]:text-sm"
       key={id}
     >
       <section>

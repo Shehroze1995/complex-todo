@@ -74,6 +74,7 @@ const Sidebar = ({
               setActiveTask(task);
               dispatch(setFilterBy(task));
               setIsModalOpen(false);
+              setIsListAdding(false);
             }}
             className={`flex place-items-center justify-between text-xl py-1 px-2 rounded-lg cursor-pointer ${
               activeTask == task && "bg-gray-300"
@@ -114,13 +115,14 @@ const Sidebar = ({
                 setActiveTask(list);
                 dispatch(setFilterBy(list));
                 setIsModalOpen(false);
+                setIsListAdding(false);
               }}
               className={`flex place-items-center justify-between text-xl py-1 px-2 rounded-lg cursor-pointer ${
                 activeTask == list && "bg-gray-300"
               }`}
             >
               <button className="flex gap-3 place-items-center">
-                <FaDotCircle className="text-sm text-purple-500" />
+                <FaDotCircle className="text-sm text-red-500" />
                 {list}
               </button>
               <p className="text-base text-gray-500">
@@ -161,7 +163,7 @@ const Sidebar = ({
                   dispatch(addList({ listName }));
                   setIsListAdding(false);
                   setListName("");
-                  toast.success("List added")
+                  toast.success("List added");
                 }}
                 className="bg-green-500 py-1 flex-1"
               >

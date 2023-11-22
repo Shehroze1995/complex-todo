@@ -27,7 +27,7 @@ const Main = ({ activeTask, setIsModalOpen, setIsSidebarOpen }) => {
   }, [filterBy, taskList]);
 
   const emptyList = (
-    <p className="p-4 text-center text-2xl text-red-500">No tasks found</p>
+    <p className="p-4 text-center text-2xl text-red-500 onRenderAnimate">No tasks found</p>
   );
 
   return (
