@@ -12,6 +12,7 @@ import { MdKeyboardDoubleArrowRight, MdDelete } from "react-icons/md";
 import { addList, setFilterBy, deleteList } from "../redux/taskSlice";
 import { format } from "date-fns";
 import { toast } from "react-toastify";
+import { useEffect } from "react";
 const asideFooter = ["Settings", "Sign out"];
 
 const Sidebar = ({
@@ -42,7 +43,7 @@ const Sidebar = ({
           : window.innerWidth > 900 && !isSidebarOpen
           ? "max-w-0 invisible"
           : window.innerWidth < 900 && isSidebarOpen
-          ? "block absolute top-0 left-0 translate-x-0 h-screen w-full max-w-xs p-4 bg-gray-300"
+          ? "block fixed top-0 left-0 translate-x-0 h-screen w-full max-w-xs p-4 bg-gray-300"
           : "translate-x-[-100%] hidden"
       }`}
     >
